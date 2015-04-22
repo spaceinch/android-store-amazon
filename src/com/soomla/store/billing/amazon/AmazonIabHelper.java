@@ -28,6 +28,7 @@ import com.amazon.device.iap.model.PurchaseUpdatesResponse;
 import com.amazon.device.iap.model.Receipt;
 import com.amazon.device.iap.model.UserData;
 import com.amazon.device.iap.model.UserDataResponse;
+import com.amazon.device.iap.model.FulfillmentResult;
 import com.soomla.SoomlaApp;
 import com.soomla.SoomlaUtils;
 import com.soomla.store.billing.IabHelper;
@@ -146,6 +147,10 @@ public class AmazonIabHelper extends IabHelper {
 
                     IabPurchase purchase = new IabPurchase(ITEM_TYPE_INAPP, sku, purchaseToken, response.getRequestId().toString(), 0);
                     purchase.setDeveloperPayload(AmazonIabHelper.this.mExtraData);
+
+                    // TODO: ALL IAP's are immediately fulfilled.  This should be handled better.
+                    PurchasingService.notifyFulfillment(receipt.getReceiptId(), FulfillmentResult.FULFILLED);
+
                     purchaseSucceeded(purchase);
                     AmazonIabHelper.this.mExtraData = "";
                     break;
